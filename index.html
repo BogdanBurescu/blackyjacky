@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Blackjack Strategy Calculator</title>
+    <title>BlackyJacky</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -28,7 +28,7 @@
         .input-group:hover {
             background-color: #454545;
         }
-        input[type="number"] {
+        input[type="number"], input[type="password"] {
             background-color: #2d2d2d;
             border: 1px solid #555;
             color: #fff;
@@ -36,6 +36,9 @@
             border-radius: 4px;
             margin: 0 10px;
             width: 80px;
+        }
+        input[type="password"] {
+            width: 200px;
         }
         button {
             background-color: #4CAF50;
@@ -113,87 +116,126 @@
             padding: 15px;
             border-radius: 8px;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 10px 0;
-            background-color: #2d2d2d;
+        #passwordSection {
+            text-align: center;
+            margin: 50px auto;
+            max-width: 400px;
         }
-        th, td {
-            border: 1px solid #555;
-            padding: 8px;
-            text-align: left;
+        .login-error {
+            color: #ff6b6b;
+            margin-top: 10px;
+            display: none;
+        }
+        #mainContent {
+            display: none;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>♠️ Blackjack Strategy Calculator ♣️</h1>
-        
-        <div class="input-group">
-            <label>Initial Bankroll: $</label>
-            <input type="number" id="initialBankroll" min="1">
-            <label>Number of Decks: </label>
-            <input type="number" id="numDecks" min="1">
-            <button onclick="initializeGame()">Start Game</button>
+        <!-- Password Section -->
+        <div id="passwordSection">
+            <h1>🎲 BlackyJacky 🎲</h1>
+            <div class="input-group">
+                <label>Enter Password:</label>
+                <input type="password" id="passwordInput">
+                <button onclick="checkPassword()">Login</button>
+                <div class="login-error" id="loginError">Incorrect password. Please try again.</div>
+            </div>
         </div>
 
-        <div class="status" id="gameStatus"></div>
-        
-        <div id="gameControls" style="display: none;">
+        <!-- Main Content (Initially Hidden) -->
+        <div id="mainContent">
+            <h1>🎲 BlackyJacky 🎲</h1>
+            
             <div class="input-group">
-                <h3>🎭 Dealer's Card</h3>
-                <input type="number" id="dealerCard" class="card-input" min="2" max="11">
-                <button onclick="setDealerCard()">Set Dealer Card</button>
+                <label>Initial Bankroll: $</label>
+                <input type="number" id="initialBankroll" min="1">
+                <label>Number of Decks: </label>
+                <input type="number" id="numDecks" min="1">
+                <button onclick="initializeGame()">Start Game</button>
             </div>
 
-            <div class="input-group">
-                <h3>🎮 Your Cards</h3>
-                <input type="number" id="playerCard1" class="card-input" min="2" max="11">
-                <input type="number" id="playerCard2" class="card-input" min="2" max="11">
-                <button onclick="setPlayerCards()">Set Player Cards</button>
-            </div>
-
-            <div class="input-group">
-                <h3>👥 Other Players' Cards</h3>
-                <input type="number" id="otherPlayersCard" class="card-input" min="2" max="11">
-                <div class="action-group">
-                    <button onclick="addOtherPlayerCard()">Add Card</button>
-                    <button onclick="finishOtherPlayers()">Finish Other Players</button>
-                    <button onclick="resetOtherPlayers()">Reset Other Players</button>
+            <div class="status" id="gameStatus"></div>
+            
+            <div id="gameControls" style="display: none;">
+                <div class="input-group">
+                    <h3>🎭 Dealer's Card</h3>
+                    <input type="number" id="dealerCard" class="card-input" min="2" max="11">
+                    <button onclick="setDealerCard()">Set Dealer Card</button>
                 </div>
-            </div>
 
-            <div id="actionButtons" style="display: none;" class="action-group">
-                <button onclick="hit()" id="hitButton">Hit</button>
-                <button onclick="stand()" id="standButton">Stand</button>
-                <button onclick="double()" id="doubleButton">Double</button>
-                <button onclick="split()" id="splitButton">Split</button>
-            </div>
-
-            <div id="splitControls" style="display: none;" class="split-hands">
-                <div class="split-hand">
-                    <h4>First Hand</h4>
-                    <button onclick="hitSplit(1)">Add Card</button>
+                <div class="input-group">
+                    <h3>🎮 Your Cards</h3>
+                    <input type="number" id="playerCard1" class="card-input" min="2" max="11">
+                    <input type="number" id="playerCard2" class="card-input" min="2" max="11">
+                    <button onclick="setPlayerCards()">Set Player Cards</button>
                 </div>
-                <div class="split-hand">
-                    <h4>Second Hand</h4>
-                    <button onclick="hitSplit(2)">Add Card</button>
-                </div>
-            </div>
 
-            <div class="input-group">
-                <h3>🎭 Dealer's Final Cards</h3>
-                <input type="number" id="dealerFinalCard" class="card-input" min="2" max="11">
-                <div class="action-group">
-                    <button onclick="addDealerFinalCard()">Add Card</button>
-                    <button onclick="finishHand()">Finish Hand</button>
+                <div class="input-group">
+                    <h3>👥 Other Players' Cards</h3>
+                    <input type="number" id="otherPlayersCard" class="card-input" min="2" max="11">
+                    <div class="action-group">
+                        <button onclick="addOtherPlayerCard()">Add Card</button>
+                        <button onclick="finishOtherPlayers()">Finish Other Players</button>
+                        <button onclick="resetOtherPlayers()">Reset Other Players</button>
+                    </div>
+                </div>
+
+                <div id="actionButtons" style="display: none;" class="action-group">
+                    <button onclick="hit()" id="hitButton">Hit</button>
+                    <button onclick="stand()" id="standButton">Stand</button>
+                    <button onclick="double()" id="doubleButton">Double</button>
+                    <button onclick="split()" id="splitButton">Split</button>
+                </div>
+
+                <div id="splitControls" style="display: none;" class="split-hands">
+                    <div class="split-hand">
+                        <h4>First Hand</h4>
+                        <button onclick="hitSplit(1)">Add Card</button>
+                    </div>
+                    <div class="split-hand">
+                        <h4>Second Hand</h4>
+                        <button onclick="hitSplit(2)">Add Card</button>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <h3>🎭 Dealer's Final Cards</h3>
+                    <input type="number" id="dealerFinalCard" class="card-input" min="2" max="11">
+                    <div class="action-group">
+                        <button onclick="addDealerFinalCard()">Add Card</button>
+                        <button onclick="finishHand()">Finish Hand</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        // Password check function
+        function checkPassword() {
+            const password = document.getElementById('passwordInput').value;
+            const correctPassword = 'VerstappenTheGoat';
+            
+            if (password === correctPassword) {
+                document.getElementById('passwordSection').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('loginError').style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        // Add event listener for Enter key on password input
+        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+
         let state = {
             bankroll: 0,
             numDecks: 0,
@@ -213,6 +255,7 @@
             unit: 0
         };
 
+        // [Rest of your original JavaScript code remains exactly the same]
         function initializeGame() {
             state.bankroll = parseInt(document.getElementById('initialBankroll').value);
             state.numDecks = parseInt(document.getElementById('numDecks').value);
@@ -227,6 +270,7 @@
             updateGameStatus();
         }
 
+        // [Continue with ALL the rest of your original JavaScript functions exactly as they were]
         function updateGameStatus() {
             const trueCount = calculateTrueCount();
             let recommendedBet = state.unit;
