@@ -273,7 +273,7 @@
         function initializeGame() {
             state.bankroll = parseInt(document.getElementById('initialBankroll').value);
             state.numDecks = parseInt(document.getElementById('numDecks').value);
-            state.unit = Math.floor(state.bankroll / 20 / 10) * 10;
+            state.unit = Math.floor(state.bankroll / 10 / 10) * 10;
             
             if (!state.bankroll || !state.numDecks) {
                 alert('Please enter valid values for bankroll and number of decks');
@@ -306,8 +306,17 @@
         }
 
         function updateCount(card) {
-            if (card >= 2 && card <= 6) state.cardCount += 1;
-            else if (card === 10 || card === 11) state.cardCount -= 1;
+	    if (card==2) state.cardCount+=0.37;
+	    if (card==3) state.cardCount+=0.44;
+            if (card==4) state.cardCount+=0.56;
+	    if (card==5) state.cardCount+=0.71;
+            if (card==6) state.cardCount+=0.41;
+	    if (card==7) state.cardCount+=0.29;
+	    if (card==8) state.cardCount+=0.01;
+	    if (card==9) state.cardCount-=0.17;
+	    if (card==10) state.cardCount-=0.51;
+	    if (card==11) state.cardCount-=0.59;
+		
             state.cardsPlayed++;
             updateGameStatus();
         }
