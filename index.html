@@ -167,6 +167,8 @@
                 <input type="number" id="initialBankroll" min="1">
                 <label>Number of Decks: </label>
                 <input type="number" id="numDecks" min="1">
+		<label>Percentage Used: </label>
+    		<input type="number" id="unitPercentage" min="1" max="100" step="1">
                 <button onclick="initializeGame()">Start Game</button>
             </div>
 
@@ -273,7 +275,16 @@
         function initializeGame() {
             state.bankroll = parseInt(document.getElementById('initialBankroll').value);
             state.numDecks = parseInt(document.getElementById('numDecks').value);
-            state.unit = Math.floor(state.bankroll / 10 / 10) * 10;
+            const unitPercentage = parseInt(document.getElementById('unitPercentage').value);
+    
+   	// Calculate state.unit based on the percentage of state.bankroll
+   	 if (unitPercentage && unitPercentage > 0 && unitPercentage <= 100) {
+        	const percentageValue = state.bankroll * (unitPercentage / 100);
+        	state.unit = Math.floor(percentageValue / 10) * 10;  // Make sure it's a multiple of 10
+    	} else {
+        	alert("Please enter a valid percentage (1-100).");
+        	return;
+    	}
             
             if (!state.bankroll || !state.numDecks) {
                 alert('Please enter valid values for bankroll and number of decks');
@@ -326,6 +337,13 @@
             return Math.round(state.cardCount / decksRemaining);
         }
 
+	document.getElementById('dealerCard').addEventListener('keypress', function(event) {
+    		if (event.key === 'Enter') {
+        	event.preventDefault();  // Prevent default action
+        	setDealerCard();         // Call the setDealerCard function
+    		}
+	});
+
         function setDealerCard() {
             const card = parseInt(document.getElementById('dealerCard').value);
             if (isValidCard(card)) {
@@ -338,6 +356,20 @@
                 }
             }
         }
+
+	document.getElementById('playerCard1').addEventListener('keypress', function(event) {
+    		if (event.key === 'Enter') {
+        	event.preventDefault();  // Prevent default action
+        	setPlayerCards();        // Call the setPlayerCards function
+    		}
+	});
+
+	document.getElementById('playerCard2').addEventListener('keypress', function(event) {
+    		if (event.key === 'Enter') {
+        	event.preventDefault();  // Prevent default action
+        	setPlayerCards();        // Call the setPlayerCards function
+    		}
+	});
 
         function setPlayerCards() {
             const card1 = parseInt(document.getElementById('playerCard1').value);
@@ -362,6 +394,14 @@
             }
         }
 
+	document.getElementById('otherPlayersCard').addEventListener('keypress', function(event) {
+   	 	// Check if the pressed key is the "Enter" key (keyCode 13)
+    		if (event.key === 'Enter') {
+        	event.preventDefault(); // Prevent form submission or other default actions
+        	addOtherPlayerCard();   // Call the addOtherPlayerCard function
+    		}
+	});
+
         function addOtherPlayerCard() {
             const card = parseInt(document.getElementById('otherPlayersCard').value);
             if (isValidCard(card)) {
@@ -381,6 +421,13 @@
             document.getElementById('otherPlayersCard').disabled = true;
             alert("Ready for dealer's final cards");
         }
+
+	document.getElementById('dealerFinalCard').addEventListener('keypress', function(event) {
+    		if (event.key === 'Enter') {
+        	event.preventDefault();  // Prevent default action
+        	addDealerFinalCard();    // Call the addDealerFinalCard function
+    		}
+	});
 
         function addDealerFinalCard() {
             const card = parseInt(document.getElementById('dealerFinalCard').value);
